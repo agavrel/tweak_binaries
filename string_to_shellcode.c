@@ -15,8 +15,6 @@ int main(int ac, char **av)
     char filename[1024];
     unsigned int byte_pos = (int)strtol(av[2], NULL, 16);
     sprintf(buffer, "printf '");
-    strcpy(filename, av[1]);
-    printf("mybin='%s' && \n", filename);
     int i;
     for (i = 0; s[i]; i++)
     {
@@ -24,6 +22,10 @@ int main(int ac, char **av)
         sprintf(buffer + 8 + i*4, "\\x%x", c);
     }
 
-    printf("%s' | dd of=$mybin bs=1 seek=$((0x%x)) count=%d conv=notrunc\n", buffer, byte_pos, i);
+    char bufferf[1024];
+    sprintf(bufferf, "%s' | dd of='%s' bs=1 seek=$((0x%x)) count=%d conv=notrunc\n", buffer, av[1], byte_pos, i);
+    printf("%s\n", bufferf);
+
+    system(bufferf);
     return 0;
 }
